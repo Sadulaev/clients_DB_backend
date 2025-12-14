@@ -1,73 +1,82 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Clients DB API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API для управления клиентами, продавцами и рассрочками.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Технологии
 
-## Description
+- NestJS
+- MongoDB + Mongoose
+- Docker
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+## Быстрый старт с Docker
 
 ```bash
-$ yarn install
+# Запустить всё (приложение + MongoDB)
+docker-compose up -d
+
+# Посмотреть логи
+docker-compose logs -f app
+
+# Остановить
+docker-compose down
 ```
 
-## Running the app
+Приложение будет доступно на http://localhost:3000
+
+## Локальная разработка
+
+### 1. Запустить только MongoDB
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+docker-compose up -d mongodb
 ```
 
-## Test
+### 2. Создать .env файл
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+# .env
+PORT=3000
+NODE_ENV=development
+MONGODB_URI=mongodb://root:example@localhost:27017/clients-db?authSource=admin
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
 ```
 
-## Support
+### 3. Установить зависимости и запустить
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+yarn install
+yarn start:dev
+```
 
-## Stay in touch
+## API Endpoints
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Auth
+- `POST /auth/sign-up` — Регистрация продавца
+- `POST /auth/sign-in` — Авторизация
 
-## License
+### Clients
+- `GET /client` — Список клиентов
+- `GET /client/:id` — Получить клиента
+- `POST /client` — Создать клиента
+- `PATCH /client/:id` — Обновить клиента
+- `DELETE /client/:id` — Удалить клиента
 
-Nest is [MIT licensed](LICENSE).
+### Contracts (Рассрочки)
+- `GET /contract` — Список рассрочек
+- `GET /contract/:id` — Получить рассрочку
+- `GET /contract/client/:clientId` — Рассрочки клиента
+- `GET /contract/seller/:sellerId` — Рассрочки продавца
+- `POST /contract` — Создать рассрочку
+- `PATCH /contract/:id` — Обновить рассрочку
+- `DELETE /contract/:id` — Удалить рассрочку
+
+## Структура проекта
+
+```
+src/
+├── auth/           # Авторизация и JWT
+├── client/         # CRUD клиентов
+├── contract/       # CRUD рассрочек
+├── seller/         # Продавцы
+└── common/         # Фильтры, пайпы
+```

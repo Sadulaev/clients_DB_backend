@@ -1,10 +1,13 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import ISeller from '../../seller/interface/seller.interface';
-import IContract from '../../contract/interface/contract.interface';
+import { HydratedDocument } from 'mongoose';
+
+export type ClientDocument = HydratedDocument<ClientSchema>;
 
 @Schema()
 export class ClientSchema {
+  _id: mongoose.Types.ObjectId;
+
   @Prop({ required: true })
   fullName: string;
 
@@ -14,12 +17,14 @@ export class ClientSchema {
   @Prop({ required: true, unique: true })
   passportNumber: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Contract' }] })
-  contracts: IContract[];
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Seller', required: true })
+  sellerId: mongoose.Types.ObjectId;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Seller' }] })
-  sellers: ISeller[];
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Contract' }] })
+  contracts: mongoose.Types.ObjectId[];
 
   @Prop({ default: false })
-  visibilityFlag: boolean;
+  isPublic: boolean;
 }
+
+export const ClientSchemaFactory = SchemaFactory.createForClass(ClientSchema);

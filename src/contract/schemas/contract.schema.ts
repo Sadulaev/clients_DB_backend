@@ -1,15 +1,18 @@
-import { Prop, raw, Schema } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
-import IClient from '../../client/interface/client.interface';
-import ISeller from '../../seller/interface/seller.interface';
+import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
+import * as mongoose from 'mongoose';
+import { HydratedDocument } from 'mongoose';
+
+export type ContractDocument = HydratedDocument<ContractSchema>;
 
 @Schema()
-export class Contract {
+export class ContractSchema {
+  _id: mongoose.Types.ObjectId;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true })
-  client: IClient;
+  client: mongoose.Types.ObjectId;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Seller', required: true })
-  seller: ISeller;
+  seller: mongoose.Types.ObjectId;
 
   @Prop({ required: true })
   title: string;
@@ -23,3 +26,5 @@ export class Contract {
   @Prop(raw([{ month: { type: Number }, status: { type: String } }]))
   billingHistory: { month: number; status: string }[];
 }
+
+export const ContractSchemaFactory = SchemaFactory.createForClass(ContractSchema);

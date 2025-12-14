@@ -1,7 +1,9 @@
 export default () => ({
   port: parseInt(process.env.PORT, 10) || 3000,
   database: {
-    host: process.env.DATABASE_HOST || 'mongodb://localhost/nest',
-    port: parseInt(process.env.DATABASE_PORT, 10) || 27017,
+    uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/clients-db',
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET || 'default-secret-change-me',
   },
 });
