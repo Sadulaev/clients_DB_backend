@@ -5,11 +5,14 @@ import { ClientService } from '../client/client.service';
 import { AddContractDto } from './dto/add-contract.dto';
 import { UpdateContractDto } from './dto/update-contract.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { SubscriptionGuard } from '../auth/guards/subscription.guard';
 import { CurrentUser, CurrentUserData } from '../auth/decorators/current-user.decorator';
+import { RequiredSubscription } from '../auth/decorators/subscription.decorator';
+import { SubscriptionType } from '../common/enums/subscription.enum';
 
 @ApiTags('contract')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, SubscriptionGuard)
 @Controller('contract')
 export class ContractController {
     constructor(

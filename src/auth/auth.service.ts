@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { JwtPayload } from 'jsonwebtoken';
+import { IJwtPayload } from './interface/jwt.interface';
+import { SubscriptionType } from '../common/enums/subscription.enum';
 
 @Injectable()
 export class AuthService {
@@ -19,8 +20,12 @@ export class AuthService {
         return await bcrypt.compare(plaintextPassword, hashedPassword);
     }
 
-    async generateJwtToken(companyName: string, sellerId: string): Promise<string> {
-        const payload: JwtPayload = { companyName, sellerId };
+    async generateJwtToken(
+        phone: string, 
+        sellerId: string, 
+        subscription: SubscriptionType
+    ): Promise<string> {
+        const payload: IJwtPayload = { phone, sellerId, subscription };
 
         return this.jwtService.sign(payload);
     }

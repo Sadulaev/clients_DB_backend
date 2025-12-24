@@ -4,11 +4,14 @@ import { ClientService } from './client.service';
 import { AddClientDto } from './dto/add-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { SubscriptionGuard } from '../auth/guards/subscription.guard';
 import { CurrentUser, CurrentUserData } from '../auth/decorators/current-user.decorator';
+import { RequiredSubscription } from '../auth/decorators/subscription.decorator';
+import { SubscriptionType } from '../common/enums/subscription.enum';
 
 @ApiTags('client')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, SubscriptionGuard)
 @Controller('client')
 export class ClientController {
     constructor(private readonly clientService: ClientService) { }

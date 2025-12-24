@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
 
 export class SignUpSellerDto {
     @ApiProperty({ example: 'Иван Иванов', description: 'ФИО продавца' })
@@ -8,16 +8,16 @@ export class SignUpSellerDto {
     @IsNotEmpty()
     fullName: string;
 
-    @ApiProperty({ example: 'ivan@example.com', description: 'Email продавца' })
-    @IsEmail()
-    @IsNotEmpty()
-    email: string;
-
-    @ApiProperty({ example: 'ООО Рога и Копыта', description: 'Название компании' })
+    @ApiProperty({ example: '+79991234567', description: 'Номер телефона продавца (РФ)' })
     @IsString()
-    @MaxLength(24)
     @IsNotEmpty()
-    companyName: string;
+    @Matches(/^\+7\d{10}$/, { message: 'Номер телефона должен быть в формате +7XXXXXXXXXX' })
+    phone: string;
+
+    @ApiPropertyOptional({ example: 'ivan@example.com', description: 'Email продавца (опционально)' })
+    @IsEmail()
+    @IsOptional()
+    email?: string;
 
     @ApiProperty({ example: 'securePassword123', description: 'Пароль' })
     @IsString()

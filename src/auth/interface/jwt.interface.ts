@@ -1,4 +1,7 @@
+import { SubscriptionType } from '../../common/enums/subscription.enum';
+
 export interface IJwtPayload {
-    companyName: string;
-    sub: string; // по сути это id
+    phone: string;
+    sellerId: string;
+    subscription: SubscriptionType;
 }

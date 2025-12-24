@@ -1,16 +1,12 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class SignInSellerDto {
-    @ApiPropertyOptional({ example: 'ivan@example.com', description: 'Email продавца (или companyName)' })
+    @ApiProperty({ example: '+79991234567', description: 'Номер телефона продавца (РФ)' })
     @IsString()
-    @IsOptional()
-    email?: string;
-
-    @ApiPropertyOptional({ example: 'ООО Рога и Копыта', description: 'Название компании (или email)' })
-    @IsString()
-    @IsOptional()
-    companyName?: string;
+    @IsNotEmpty()
+    @Matches(/^\+7\d{10}$/, { message: 'Номер телефона должен быть в формате +7XXXXXXXXXX' })
+    phone: string;
 
     @ApiProperty({ example: 'securePassword123', description: 'Пароль' })
     @IsString()

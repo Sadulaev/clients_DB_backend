@@ -1,8 +1,10 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { SubscriptionType } from '../../common/enums/subscription.enum';
 
 export interface CurrentUserData {
     sellerId: string;
-    companyName: string;
+    phone: string;
+    subscription: SubscriptionType;
 }
 
 export const CurrentUser = createParamDecorator(
